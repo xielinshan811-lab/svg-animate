@@ -1,0 +1,43 @@
+// Prisma 数据库模型
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// 用户表
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  credits       Int       @default(10)  // 初始赠送10积分
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  generations   Generation[]
+  transactions  Transaction[]
+}
+
+// 生成记录表
+model Generation {
+  id        String   @id @default(cuid())
+  userId    String
+  prompt    String
+  svgCode   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+// 积分交易记录表
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "use" 使用 | "recharge" 充值 | "gift" 赠送
+  amount    Int      // 积分变动数量
+  balance   Int      // 变动后余额
+  note      String?  // 备注
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
