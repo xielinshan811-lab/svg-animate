@@ -65,8 +65,9 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('注册错误:', error);
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
     return new Response(
-      JSON.stringify({ error: '注册失败，请稍后重试' }),
+      JSON.stringify({ error: '注册失败: ' + errorMessage }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
