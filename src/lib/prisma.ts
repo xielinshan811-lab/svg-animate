@@ -19,8 +19,8 @@ export const prisma = new Proxy({} as PrismaClient, {
         const adapter = new PrismaLibSql(libsql);
         prismaInstance = new PrismaClient({ adapter });
       } else {
-        // @ts-expect-error - 本地开发时使用默认配置
-        prismaInstance = new PrismaClient({ datasources: { db: { url: 'file:./prisma/dev.db' } } });
+        // 本地开发模式
+        prismaInstance = new PrismaClient();
       }
     }
     return (prismaInstance as unknown as Record<string, unknown>)[prop as string];
